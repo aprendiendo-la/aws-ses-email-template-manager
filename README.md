@@ -1,6 +1,7 @@
 # AWS SES Email Template Manager
 
 Simple CRUD (Create, Read, Update, Delete) Web Application to manage AWS SES email templates.
+See the live [demo](https://aws-ses-manager-demo.herokuapp.com/).
 
 [![license](https://camo.githubusercontent.com/76f0e887c183ccc31c1cb63c33d2dbf48cb2df51/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f4c6963656e73652d4d49542d677265656e2e737667)](https://github.com/aprendiendola/aws-ses-email-template-manager/blob/master/LICENSE)
 
