@@ -51,7 +51,7 @@ To deploy this application to production, you may consider implement an authenti
 
 ## Authors
 
-- **Gian Ramirez** - _Initial work_ - [PurpleBooth](https://github.com/zendostrike)
+- **Gian Ramirez** - _Initial work_ - [zendostrike](https://github.com/zendostrike)
 
 See also the list of [contributors](https://github.com/aprendiendola/aws-ses-email-template-manager/contributors) who participated in this project.
 
