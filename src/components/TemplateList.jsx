@@ -7,6 +7,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Avatar from "@material-ui/core/Avatar";
 import BeachAccessIcon from "@material-ui/icons/BeachAccess";
 import DeleteIcon from "@material-ui/icons/DeleteTwoTone";
+import Typography from "@material-ui/core/Typography";
 
 import {
   ListSubheader,
@@ -17,7 +18,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Button
+  Button,
+  ListItemAvatar
 } from "@material-ui/core";
 
 const styles = theme => ({
@@ -42,6 +44,14 @@ class TemplateList extends Component {
   };
 
   showListItems = (items, onClickListItem, selectedListItem) => {
+    if (items.length === 0) {
+      return (
+        <Typography variant="body2" color="textSecondary" align="center">
+          {"No encotramos ningún template de email."}
+        </Typography>
+      );
+    }
+
     return items.map((item, index) => {
       return (
         <ListItem
@@ -50,9 +60,11 @@ class TemplateList extends Component {
           selected={selectedListItem === index}
           onClick={() => onClickListItem(item.Name, index)}
         >
-          <Avatar>
-            <BeachAccessIcon />
-          </Avatar>
+          <ListItemAvatar>
+            <Avatar>
+              <BeachAccessIcon />
+            </Avatar>
+          </ListItemAvatar>
           <ListItemText
             primary={item.Name}
             secondary={

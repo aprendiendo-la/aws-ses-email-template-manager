@@ -7,10 +7,10 @@ export default theme => ({
   },
   appContainer: {
     maxWidth: 750,
-    margin: theme.spacing.unit * 3
+    margin: theme.spacing(3)
   },
   paperHeader: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   fab: {},
   buttonContainer: {

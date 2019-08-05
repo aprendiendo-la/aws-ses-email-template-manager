@@ -3,31 +3,31 @@ import { red, green } from "@material-ui/core/colors";
 export default theme => ({
   appContainer: {
     maxWidth: 950,
-    margin: theme.spacing.unit,
-    padding: theme.spacing.unit * 4
+    margin: theme.spacing(1),
+    padding: theme.spacing(4)
   },
   textField: {
     width: "100%"
   },
   aceEditor: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   buttonContainer: {
     display: "flex",
     justifyContent: "space-between",
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   leftIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   rightIcon: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1)
   },
   iconSmall: {
     fontSize: 20
   },
   wrapper: {
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     position: "relative"
   },
   buttonSuccess: {
@@ -56,10 +56,27 @@ export default theme => ({
   },
   paper: {
     position: "absolute",
-    width: theme.spacing.unit * 50,
+    width: theme.spacing(50),
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     outline: "none"
+  },
+  modalStyle: {
+    overflow: "scroll",
+    height: "100%"
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    margin: "auto",
+    width: "fit-content"
+  },
+  formControl: {
+    marginTop: theme.spacing(2),
+    minWidth: 120
+  },
+  formControlLabel: {
+    marginTop: theme.spacing(1)
   }
 });

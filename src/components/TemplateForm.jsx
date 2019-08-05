@@ -1,15 +1,22 @@
-import React, { Component } from "react";
+import React, { PureComponent, Fragment } from "react";
 import PropTypes from "prop-types";
-import classNames from "classnames";
 import {
-  Paper,
   TextField,
   Typography,
   CircularProgress,
   Fab,
   withStyles,
   Button,
-  Modal
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  Select,
+  FormControl,
+  MenuItem,
+  Switch,
+  InputLabel,
+  Paper,
+  FormControlLabel
 } from "@material-ui/core";
 import { Check as CheckIcon, Save as SaveIcon } from "@material-ui/icons";
 import AceEditor from "react-ace";
@@ -19,11 +26,9 @@ import "brace/theme/monokai";
 
 import styles from "./TemplateFormStyles";
 
-const LABEL_CREATE_TEMPLATE = "Crear Template";
-const LABEL_EDIT_TEMPLATE = "Editar Template";
 const LABEL_PREVIEW = "Previsualizar";
 
-class TemplateForm extends Component {
+class TemplateForm extends PureComponent {
   state = {
     template: {
       TemplateName: "",
@@ -31,40 +36,25 @@ class TemplateForm extends Component {
       TextPart: "",
       HtmlPart: ""
     },
-    loading: false,
-    success: false,
-    errorMessage: "",
-    open: false
+    open: false,
+    modalFullWidth: true,
+    modalMaxWidth: "sm"
   };
-
-  componentDidMount() {
-    const { template } = this.props;
-
-    if (template) {
-      this.setTemplate(template);
-    }
-  }
 
   componentWillReceiveProps(nextProps) {
     const { template } = nextProps;
 
     if (template) {
-      this.setTemplate(template);
+      this.setState({
+        template: {
+          TemplateName: template.TemplateName,
+          SubjectPart: template.SubjectPart,
+          TextPart: template.TextPart,
+          HtmlPart: template.HtmlPart
+        }
+      });
     }
   }
-
-  setTemplate = template => {
-    this.setState({
-      template: {
-        TemplateName: template.TemplateName,
-        SubjectPart: template.SubjectPart,
-        TextPart: template.TextPart,
-        HtmlPart: template.HtmlPart
-      },
-      errorMessage: "",
-      success: false
-    });
-  };
 
   handleChange = name => event => {
     const { template } = this.state;
@@ -75,56 +65,48 @@ class TemplateForm extends Component {
     });
   };
 
-  resolved = template => {
-    const { pushTemplate, isCreate } = this.props;
-
-    this.setState({ success: true });
-    if (isCreate) {
-      pushTemplate(template);
-    }
-  };
-
-  rejected = result => {
-    this.setState({ errorMessage: result });
-  };
-
   handleSubmit = async event => {
     event.preventDefault();
 
     const { onSubmit } = this.props;
     const { template } = this.state;
 
-    this.setState({ loading: true });
-
-    await onSubmit(template).then(this.resolved(template), this.rejected);
-
-    this.setState({ loading: false });
+    onSubmit(template);
   };
 
-  handleOpen = () => {
+  handlePreviewOpen = () => {
     this.setState({ open: true });
   };
 
-  handleClose = () => {
+  handlePreviewClose = () => {
     this.setState({ open: false });
   };
 
-  render() {
-    const { classes, isCreate, template: templateFromProps } = this.props;
-    const { template, loading, success, errorMessage } = this.state;
-
-    const buttonClassname = classNames({
-      [classes.buttonSuccess]: success
+  handleMaxWidthChange = event => {
+    this.setState({
+      modalMaxWidth: event.target.value
     });
+  };
 
-    if (!templateFromProps) return "";
+  handleFullWidthChange = event => {
+    this.setState({
+      modalFullWidth: event.target.checked
+    });
+  };
+
+  render() {
+    const {
+      classes,
+      isCreate,
+      loadingSubmit,
+      success,
+      errorMessage
+    } = this.props;
+    const { template, modalFullWidth, modalMaxWidth } = this.state;
 
     return (
-      <Paper className={classes.appContainer}>
+      <Fragment>
         <form onSubmit={e => this.handleSubmit(e)}>
-          <Typography variant="h5" gutterBottom>
-            {isCreate ? LABEL_CREATE_TEMPLATE : LABEL_EDIT_TEMPLATE}
-          </Typography>
           <TextField
             id="outlined-name"
             label="TemplateName"
@@ -167,7 +149,7 @@ class TemplateForm extends Component {
             <Typography variant="subtitle2" gutterBottom>
               {"HtmlPart"}
             </Typography>
-            <Button onClick={this.handleOpen}>{LABEL_PREVIEW}</Button>
+            <Button onClick={this.handlePreviewOpen}>{LABEL_PREVIEW}</Button>
           </div>
           <AceEditor
             className={classes.aceEditor}
@@ -185,33 +167,64 @@ class TemplateForm extends Component {
               {errorMessage}
             </Typography>
             <div className={classes.wrapper}>
-              <Fab color="primary" className={buttonClassname} type="submit">
+              <Fab color="primary" type="submit">
                 {success ? <CheckIcon /> : <SaveIcon />}
               </Fab>
-              {loading && (
+              {loadingSubmit && (
                 <CircularProgress size={68} className={classes.fabProgress} />
               )}
             </div>
           </div>
         </form>
-        <Modal
-          aria-labelledby="simple-modal-title"
-          aria-describedby="simple-modal-description"
+        <Dialog
+          fullWidth={modalFullWidth}
+          maxWidth={modalMaxWidth}
           open={this.state.open}
-          onClose={this.handleClose}
+          onClose={this.handlePreviewClose}
+          aria-labelledby="preview-email-dialog"
         >
-          <div
-            style={{
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)"
-            }}
-            className={classes.paper}
-          >
-            <div dangerouslySetInnerHTML={{ __html: template.HtmlPart }} />
-          </div>
-        </Modal>
-      </Paper>
+          <DialogContent>
+            <DialogContentText>
+              Puedes cambiar el tamaño del diálogo que se ajuste a cada
+              dispositivo:
+            </DialogContentText>
+            <form className={classes.form} noValidate>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="max-width">Ancho del diálogo</InputLabel>
+                <Select
+                  value={modalMaxWidth}
+                  onChange={this.handleMaxWidthChange}
+                  inputProps={{
+                    name: "max-width",
+                    id: "max-width"
+                  }}
+                >
+                  <MenuItem value={false}>false</MenuItem>
+                  <MenuItem value="xs">xs</MenuItem>
+                  <MenuItem value="sm">sm</MenuItem>
+                  <MenuItem value="md">md</MenuItem>
+                  <MenuItem value="lg">lg</MenuItem>
+                  <MenuItem value="xl">xl</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControlLabel
+                className={classes.formControlLabel}
+                control={
+                  <Switch
+                    checked={modalFullWidth}
+                    onChange={this.handleFullWidthChange}
+                    value="fullWidth"
+                  />
+                }
+                label="Full width"
+              />
+            </form>
+            <Paper style={{ padding: "10px 20px 20px 20px" }}>
+              <div dangerouslySetInnerHTML={{ __html: template.HtmlPart }} />
+            </Paper>
+          </DialogContent>
+        </Dialog>
+      </Fragment>
     );
   }
 }
