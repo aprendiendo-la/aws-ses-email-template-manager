@@ -5,7 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.3.1",
     "@material-ui/icons": "^4.2.1",
-    "aws-sdk": "^2.421.0",
+    "aws-sdk": "^2.814.0",
     "clsx": "^1.0.4",
     "react": "^16.8.4",
     "react-ace": "^6.4.0",
